@@ -18,20 +18,19 @@ const camera = new THREE.PerspectiveCamera(
     75, window.innerWidth / window.innerHeight, 0.1, 1000
 );
 
-const orbit = new OrbitControls(camera, renderer.domElement);
+
 
 const assetLoader = new GLTFLoader();
 
-mixer = [];
-druidModel = [];
-
-druidIdleAction = [];
-druidStartGoAction = [];
-druidGoAction = [];
-
-loaded = false;
+var mixer;
+var druidModel;
 
 
+var druidIdleAction;
+var druidStartGoAction;
+var druidGoAction;
+
+var loaded = false;
 
 assetLoader.load(druid.href, function(gltf){
     druidModel = gltf.scene;
@@ -107,35 +106,34 @@ scene.add(sphere1);
 
 const clock = new THREE.Clock();
 
-druidVector = {x: 0.0, y: 0.0};
-druidSpeed= -0.04;
-rotationSpeed = 0.03;
+var druidVector = {x: 0.0, y: 0.0};
+var druidSpeed= -0.04;
+var rotationSpeed = 0.03;
 
+
+const orbit = new OrbitControls(camera, renderer.domElement);
 orbit.maxDistance = 2;
 orbit.maxPolarAngle = Math.PI / 1.2;
 orbit.autoRotate = false;
 
-wasGoing = false;
-wasGoingFrame = 0;
-
-druidStartGoAction.timeScale = 8.0;
+var wasGoing = false;
+var wasGoingFrame = 0;
 
 const raycaster = new THREE.Raycaster();
 
-druidLastSavePosition = new THREE.Vector3(0,0,0);
+var druidLastSavePosition = new THREE.Vector3(0,0,0);
 
-collides = false;
+var collides = false;
 
 const geometry = new THREE.SphereGeometry( 1, 32, 16 ); 
 const material = new THREE.MeshBasicMaterial( { color: 0x33cc33 } ); 
 const endSphere = new THREE.Mesh( geometry, material ); scene.add( endSphere );
 
-//endSphere.position.set(80,0,80);
-endSphere.position.set(-3,0,0);
+endSphere.position.set(80,0,80);
 endSphere.layers.enable(2);
 
 function animate() {
-    if(mixer.update && loaded && druidGoAction.stop){
+    if(loaded && mixer && mixer.update && druidGoAction.stop){
         mixer.update(clock.getDelta());
         orbit.target.set(druidModel.position.x, druidModel.position.y+2, druidModel.position.z);
         collides = false;
